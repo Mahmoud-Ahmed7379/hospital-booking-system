@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستشفى الشفاء التخصصي - حجز المواعيد</title>
+    <link rel="stylesheet" href="style.css?v=3.0">
+    <style>
+        /* خلفية مريحة للعين (رمادي فاتح هادئ) بدلاً من الأبيض الفاقع */
+        body {
+            background-color: #f4f7f6;
+            color: #2b2d42;
+            margin: 0;
+            font-family: inherit;
+        }
+        .booking-section {
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 450px;
+            text-align: right;
+            border: 1px solid #e2e8f0;
+        }
+        .form-card label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #03045e;
+            font-size: 15px;
+        }
+        .form-card input, .form-card select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: inherit;
+            background-color: #fafafa;
+        }
+        .form-card input:focus, .form-card select:focus {
+            outline: none;
+            border-color: #0077b6;
+            background-color: #fff;
+        }
+        .form-card button {
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        .form-card button:hover {
+            background-color: #023e8a;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شريط التنقل الموحد -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">مستشفى الشفاء</a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="booking.html" class="active">حجز المواعيد</a></li>
+                <li><a href="lab.html">التحاليل الطبية</a></li>
+                <li><a href="faq.html">الأسئلة والمتابعة</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- نموذج الحجز التفاعلي -->
+    <section class="booking-section" id="booking-form-section">
+        <h2 style="color: #03045e; margin-bottom: 25px;">حجز موعد جديد</h2>
+        <div class="form-card">
+            <label>اسم المريض:</label>
+            <input type="text" id="patientName" placeholder="أدخل اسم المريض هنا">
+
+            <label>سن المريض:</label>
+            <input type="number" id="patientAge" min="0" placeholder="أدخل السن">
+
+            <label>القسم المطلوب:</label>
+            <select id="patientDept">
+                <option value="باطنة">قسم الباطنة</option>
+                <option value="أطفال">قسم الأطفال</option>
+                <option value="عظام">قسم العظام</option>
+                <option value="أسنان">قسم الأسنان</option>
+            </select>
+
+            <button onclick="submitBooking()">تأكيد وحجز الموعد</button>
+            
+            <!-- صندوق عرض النتيجة والتنبيهات التفصيلية -->
+            <div id="result-box" style="display: none;"></div>
+        </div>
+    </section>
+
+    <!-- تذييل الصفحة -->
+    <footer style="text-align: center; padding: 20px; color: #64748b; font-size: 14px; background: #eef2f6;">
+        تم تطوير هذا الموقع بواسطة: <strong>محمود أحمد</strong> &copy; 2026
+    </footer>
+
+    <!-- كود الجافاسكريبت للتحقق والحجز -->
+    <script>
+        function submitBooking() {
+            const nameInput = document.getElementById('patientName').value.trim();
+            const ageInput = document.getElementById('patientAge').value.trim();
+            const deptInput = document.getElementById('patientDept').value;
+            const resultBox = document.getElementById('result-box');
+
+            // التحقق من الحقول الفارغة
+            if (nameInput === "" || ageInput === "") {
+                resultBox.style.display = "block";
+                resultBox.style.backgroundColor = "#fee2e2";
+                resultBox.style.color = "#991b1b";
+                resultBox.style.border = "1px solid #f87171";
+                resultBox.style.padding = "12px";
+                resultBox.style.borderRadius = "8px";
+                resultBox.style.marginTop = "15px";
+                resultBox.style.textAlign = "right";
+                resultBox.style.fontWeight = "bold";
+                resultBox.innerHTML = "❌ <strong>خطأ:</strong> يرجى ملء جميع الحقول المطلوبة وعدم ترك أي خانة فارغة!";
+                return;
+            }
+
+            // التحقق من أن الاسم حروف فقط
+            const nameRegex = /^[\u0600-\u06FF\sA-Za-z]+$/;
+            if (!nameRegex.test(nameInput)) {
+                resultBox.style.display = "block";
+                resultBox.style.backgroundColor = "#fee2e2";
+                resultBox.style.color = "#991b1b";
+                resultBox.style.border = "1px solid #f87171";
+                resultBox.style.padding = "12px";
+                resultBox.style.borderRadius = "8px";
+                resultBox.style.marginTop = "15px";
+                resultBox.style.textAlign = "right";
+                resultBox.style.fontWeight = "bold";
+                resultBox.innerHTML = "❌ <strong>خطأ:</strong> اسم المريض يجب أن يحتوي على حروف فقط بدون أرقام أو رموز!";
+                return;
+            }
+
+            const age = parseInt(ageInput);
+            let categoryText = "";
+
+            if (age < 12) {
+                categoryText = "طفل (توجيه لقسم الأطفال برعاية خاصة)";
+            } else if (age >= 60) {
+                categoryText = "كبار سن (أولوية في الاستقبال)";
+            } else {
+                categoryText = "بالغ";
+            }
+
+            // عرض رسالة النجاح التفصيلية
+            resultBox.style.display = "block";
+            resultBox.style.backgroundColor = "#dcfce7";
+            resultBox.style.color = "#166534";
+            resultBox.style.border = "1px solid #86efac";
+            resultBox.style.padding = "15px";
+            resultBox.style.borderRadius = "8px";
+            resultBox.style.marginTop = "15px";
+            resultBox.style.textAlign = "right";
+            resultBox.style.lineHeight = "1.6";
+            
+            resultBox.innerHTML = `
+                ✅ <strong>تم حجز الموعد بنجاح!</strong><br>
+                - اسم المريض: <strong>${nameInput}</strong><br>
+                - السن: <strong>${age} سنة</strong><br>
+                - الفئة: <strong>${categoryText}</strong><br>
+                - القسم الطبي: <strong>${deptInput}</strong>
+            `;
+
+            // حفظ البيانات في LocalStorage
+            let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            appointments.push({ name: nameInput, age: age, category: categoryText, dept: deptInput });
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+        }
+    </script>
+</body>
+</html>
